@@ -1,6 +1,6 @@
 # AWS Load Balancing Lab
 
-Laboratorio de **Sistemas Distribuidos** (Lab02): un Application Load Balancer de AWS reparte tráfico en round robin entre dos instancias EC2, con HTTPS confiable de punta a punta — sin usar CloudFront, sin comprar un dominio, y sin gastar créditos de AWS Academy en nada fuera de lo que el laboratorio pide.
+Laboratorio de **Sistemas Distribuidos** (Lab02): un Application Load Balancer de AWS distribuye el tráfico en round robin entre dos instancias EC2, con HTTPS confiable de punta a punta. Sin comprar un dominio y gastando la menor cantidad posible de créditos en AWS Academy.
 
 Todo se despliega con Terraform. La parte de AWS es efímera (se crea y se destruye libremente); el frente HTTPS vive fuera de AWS, en una máquina personal siempre encendida, y se resincroniza solo en cada `terraform apply`.
 
@@ -24,7 +24,7 @@ flowchart LR
     end
 ```
 
-**Por qué está partido así:** AWS Academy Learner Lab no deja crear CloudFront (`AccessDenied`) y no hay dominio propio para pedir un certificado validado por DNS. En vez de eso, [Tailscale Funnel](https://tailscale.com/kb/1223/funnel) —gratis— expone la máquina personal a internet con un certificado real de Let's Encrypt, y un pequeño proxy en Node.js reenvía cada petición al ALB. El Load Balancer y las dos EC2 quedan exactamente como pide el laboratorio: nada de esto las toca ni les agrega lógica.
+**Por qué está partido así:** AWS Academy Learner Lab no deja crear CloudFront (`AccessDenied`) y no hay dominio propio para pedir un certificado validado por DNS. En vez de eso, [Tailscale Funnel](https://tailscale.com/kb/1223/funnel) [gratis] expone la máquina personal a internet con un certificado real de Let's Encrypt, y un pequeño proxy en Node.js reenvía cada petición al ALB. El Load Balancer y las dos EC2 sin agrega lógica.
 
 ## Qué hace cada pieza
 
@@ -82,6 +82,3 @@ for i in $(seq 1 10); do curl -sk https://<alb-dns>/api/whoami; echo; done
 
 Para este laboratorio, con presupuesto $0 y sin dominio propio disponible, es una elección razonada. En un sistema de producción real, el certificado viviría directamente en el ALB con un dominio propio + ACM.
 
-## Lab02 vs. Lab03
-
-Este laboratorio fija `instance_count = 2` a propósito — son EC2 estáticas, no un Auto Scaling Group. Ese es precisamente el siguiente paso (Lab03): en vez de un número fijo de instancias, un grupo que crece y se encoge solo según la demanda real.
