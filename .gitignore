@@ -1,0 +1,15 @@
+# Terraform local working files — never commit provider binaries or state
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+
+# Any local variable overrides (may contain secrets like ts_authkey)
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+
+# OS / editor cruft
+.DS_Store
